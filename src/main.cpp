@@ -1,9 +1,12 @@
 #include "Arduino.h"
 #include "WiFi.h" // <-------------------- beware!!! W i F i . h, remember the capital 'F'
 #include <OSCMessage.h>
+#include "../credentials.c" // <---------- set wifi credentials here!
+
 #define LED 2
 #define CV 23
 // #define Wifi WiFi
+
 
 #ifdef DEBUG
   #define D(x) x
@@ -37,7 +40,6 @@ void setCV(OSCMessage &msg) {
   // float inc = 255.0 / 100.0; // converts 0 - 255 values to a scale of 0 - 100% of 3.3V
   // int value = (int)(inc * cv + 0.5);
   D(Serial.printf("Dimmer value: %i\n", value);)
-  // Range values are between 0 - 255
   ledcWrite(channel, cv); 
 }
 
@@ -60,8 +62,7 @@ void receiveMessage() {
 }
 
 void connected() {
-  // Blink the built-in LED
-  Serial.printf("Connected!\n");
+  Serial.printf("Connected!\n");// %s", WiFi.status());
   Serial.println(WiFi.localIP());
   int on[5] = {300, 100, 100, 100, 300};
   int off[5] = {150, 100, 100, 100, 150};
@@ -79,8 +80,8 @@ void setup() {
   pinMode(LED, OUTPUT);
   ledcSetup(channel, freq, resolution);
   ledcAttachPin(CV, channel);
-  const char* ssid = "SSID";
-  const char* password = "PASSWORD";
+  const char* ssid = SSID;
+  const char* password = PASS;
   unsigned int port = 8888;
   Serial.begin(115200);
   WiFi.begin(ssid, password);
@@ -88,6 +89,8 @@ void setup() {
     Serial.print("Retry connection\n");
     delay(500);
   }
+
+  // If WiFi.status = 
   connected();
   udp.begin(port);
 }
