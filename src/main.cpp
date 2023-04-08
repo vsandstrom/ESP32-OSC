@@ -15,7 +15,7 @@ WiFiUDP udp;
 const int update_rate = 8;
 const int channel = 0; // <--- chooses which of the PWM units on the ESP32 to use
 const int freq = 5000; // <--- the frequency of the pulse
-const int resolution = 16; // <--- on ESP32 the useful bits are 16.
+const int resolution = 8; // <--- on ESP32 the useful bits are 16.
 
 // Change to analogWrite message and set to different OSC messages, "fwd" / "bck"
 void ledToggle(OSCMessage &msg) {
@@ -34,10 +34,11 @@ void setCV(OSCMessage &msg) {
   // the voltage 0V - 3.3V is represented by 0 - 255 
   // to get up to the voltage required, perhaps a voltage regulator is required.
   float cv = msg.getInt(0);
-  float inc = 255.0 / 100.0; // converts 0 - 255 values to a scale of 0 - 100% of 3.3V
-  int value = (int)(inc * cv + 0.5);
+  // float inc = 255.0 / 100.0; // converts 0 - 255 values to a scale of 0 - 100% of 3.3V
+  // int value = (int)(inc * cv + 0.5);
   D(Serial.printf("Dimmer value: %i\n", value);)
-  ledcWrite(channel, value); 
+  // Range values are between 0 - 255
+  ledcWrite(channel, cv); 
 }
 
 void receiveMessage() {
@@ -48,6 +49,7 @@ void receiveMessage() {
     while (size--) {
       msg.fill(udp.read());
     }
+    Serial.println("");
     if (!msg.hasError()) {
       msg.dispatch("/cv", setCV);
       msg.dispatch("/led", ledToggle);
