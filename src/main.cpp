@@ -2,11 +2,14 @@
 #include "WiFi.h" // <-------------------- beware!!! W i F i . h, remember the capital 'F'
 #include <OSCMessage.h>
 #define LED 2
-#define CV 0
+#define CV 16
 // #define Wifi WiFi
 
 WiFiUDP udp;
-int update_rate = 16;
+const int update_rate = 16;
+const int channel = 0; // <--- chooses which of the PWM units on the ESP32 to use
+const int freq = 5000; // <--- the frequency of the pulse
+const int resolution = 8; // <--- on ESP32 the useful bits are 16.
 
 // Change to analogWrite message and set to different OSC messages, "fwd" / "bck"
 void ledToggle(OSCMessage &msg) {
@@ -22,22 +25,26 @@ void ledToggle(OSCMessage &msg) {
 
 // Perhaps set this to respond to different messages
 void setCV(OSCMessage &msg) {
+  // the voltage 0V - 3.3V is represented by 0 - 255 
+  // to get up to the voltage required, perhaps a voltage regulator is required.
   float cv = msg.getFloat(0);
-  analogWrite(CV, cv);
+  float inc = 255.0 / 100.0; // converts 0 - 255 values to a scale of 0 - 100% of 3.3V
+  int value = (int)(inc * cv + 0.5);
+  ledcWrite(CV, value); 
 }
 
 void receiveMessage() {
-  OSCMessage inmsg;
+  OSCMessage msg;
   int size = udp.parsePacket();
 
   if (size > 0) {
     while (size--) {
-      inmsg.fill(udp.read());
+      msg.fill(udp.read());
     }
-    if (!inmsg.hasError()) {
-      inmsg.dispatch("/led", ledToggle);
+    if (!msg.hasError()) {
+      msg.dispatch("/led", ledToggle);
       // finetune messages to just do one speed, reverse etc.
-      inmsg.dispatch("/cv", setCV);
+      msg.dispatch("/cv", setCV);
     } 
     //else { auto error = inmsg.getError(); }
   }
@@ -47,6 +54,8 @@ void setup() {
   // put your setup code here, to run once:
   WiFi.mode(WIFI_STA);
   pinMode(LED, OUTPUT);
+  ledcSetup(channel, freq, resolution);
+  ledcAttachPin(CV, channel);
   const char* ssid = "iPhone (122)";
   const char* password = "testing999";
   unsigned int port = 8888;
