@@ -1,13 +1,13 @@
 (
 // Target IP. Change the IP address accordingly
-~ip = "172.20.10.4";
+~ip = "IP";
 ~port = 8888;
 t = NetAddr.new(~ip, ~port);
 
 )
 
 // Turn led on
-t.sendMsg("/led", 1)
+t.sendMsg("/led", 1);
 
 // Turn led off
 t.sendMsg("/led", 0)
@@ -21,4 +21,4 @@ t.sendMsg("/led", 0)
     ).play
 )
 
-t.sendMsg("/cv", 0);
+t.sendMsg("/cv", 30);

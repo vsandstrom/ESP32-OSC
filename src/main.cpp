@@ -60,7 +60,8 @@ void receiveMessage() {
 }
 
 void connected() {
-  Serial.printf("Connected!\n");// %s", WiFi.status());
+  // Blink the built-in LED
+  Serial.printf("Connected!\n");
   Serial.println(WiFi.localIP());
   int on[5] = {300, 100, 100, 100, 300};
   int off[5] = {150, 100, 100, 100, 150};
@@ -78,8 +79,8 @@ void setup() {
   pinMode(LED, OUTPUT);
   ledcSetup(channel, freq, resolution);
   ledcAttachPin(CV, channel);
-  const char* ssid = "iPhone (122)";
-  const char* password = "testing999";
+  const char* ssid = "SSID";
+  const char* password = "PASSWORD";
   unsigned int port = 8888;
   Serial.begin(115200);
   WiFi.begin(ssid, password);
@@ -87,19 +88,11 @@ void setup() {
     Serial.print("Retry connection\n");
     delay(500);
   }
-
-  // If WiFi.status = 
   connected();
   udp.begin(port);
 }
 
 void loop() {
-  // put your main code here, to run repeatedly:
-  // Serial.printf("Hello\n");
-  // digitalWrite(LED, 1);
-  // delay(250);
-  // digitalWrite(LED, 0);
-  // delay(250);
   receiveMessage();
   delay(update_rate);
 }
