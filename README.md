@@ -2,7 +2,7 @@
 
 The ESP32 uC is designed to handle recieving OSC (Open Sound Control) messages over wifi, and outputing a variable voltage, or an on/off state. The intended purpose is to be able to remote control custom devices from QLab in a theater setting.
 
-The platformio project is set up so that you need to supply the credentials for the wifi network you want to work with inside a file called ***credentials.c***:
+The platformio project is set up so that you need to supply the credentials for the wifi network you want to work with inside a file called ***credentials.c*** in the root of the project:
 ```c
 // inside credentials.c
 #define SSID (string) // name of the wifi router
@@ -38,3 +38,6 @@ The default behaviour is using the pin **23** as a varable voltage output, using
 ```
 
  This should be easy to configure and expand upon. 
+
+### Notes
+TODO: The esp32 network connection is currently configured as a Wifi station, but could be simpler if it was configured as a wifi access point instead. 
