@@ -29,4 +29,12 @@ The esp32-device will display a short blinking sequence to signal that it has co
 $ pio device monitor -b 115200
 ```
 ## Usage
-The default behaviour is using the pin **23** as output. It is the one next to the corner GND pin. This should be easy to configure and expand upon. 
+The default behaviour is using the pin **23** as a varable voltage output, using PWM to ajust its output. The signal is between 0V - +3.3V and is set using an 8bit value, 0 - 255. It is the one next to the corner GND pin.<br>
+```lua
+-- The OSC address of the default variable voltage output:
+/cv -- (values 0 - 255)
+-- The address of the built-in LED
+/led -- (values 0 - 1)
+```
+
+ This should be easy to configure and expand upon. 
