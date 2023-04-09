@@ -1,6 +1,6 @@
 # ESP32-OSC
 
-The ESP32 uC is designed to handle recieving OSC (Open Sound Control) messages over wifi, and outputing a variable voltage, or an on/off state. 
+The ESP32 uC is designed to handle recieving OSC (Open Sound Control) messages over wifi, and outputing a variable voltage, or an on/off state. The intended purpose is to be able to remote control custom devices from QLab in a theater setting.
 
 The platformio project is set up so that you need to supply the credentials for the wifi network you want to work with inside a file called ***credentials.c***:
 ```c
@@ -28,3 +28,5 @@ The esp32-device will display a short blinking sequence to signal that it has co
 # this tells you the esp32 own IP, needed for sending OSC-messages to the device
 $ pio device monitor -b 115200
 ```
+## Usage
+The default behaviour is using the pin **23** as output. It is the one next to the corner GND pin. This should be easy to configure and expand upon. 
