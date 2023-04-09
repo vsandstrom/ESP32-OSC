@@ -40,4 +40,4 @@ The default behaviour is using the pin **23** as a varable voltage output, using
  This should be easy to configure and expand upon. 
 
 ### Notes
-TODO: The esp32 network connection is currently configured as a Wifi station, but should be simpler if it was configured as a wifi access point instead. 
+TODO: The esp32 network connection is currently configured as a Wifi station, but could be simpler if it was configured as a wifi access point instead. 
