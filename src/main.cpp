@@ -13,11 +13,13 @@
   #define D(x)
 #endif
   
+
 WiFiUDP udp;
 const int update_rate = 8;
 const int channel = 0; // <----- chooses which of the PWM units on the ESP32 to use
-const int freq = 5000; // <----- the frequency of the pulse
-const int resolution = 8; // <-- the resolution is 8 bit : 0 - 255  
+const int FREQUENCY = 1000; // <----- the frequency of the pulse
+const int RESOLUTION = 16; // <-- if the RESOLUTION is 8 bit : 0 - 255, 16 bit : 0 - 65535
+const int MAX = 65535;
 
 void ledToggle(OSCMessage &msg) {
   switch (msg.getInt(0)) {
@@ -33,9 +35,11 @@ void ledToggle(OSCMessage &msg) {
 void setCV(OSCMessage &msg) {
   // the voltage 0V - 3.3V is represented by 0 - 255 
   // to get the voltage required, perhaps a voltage regulator is required.
-  float cv = msg.getInt(0);
-  D(Serial.printf("Dimmer value: %d\n", cv);)
-  ledcWrite(channel, cv); 
+  float cv = msg.getFloat(0);
+  int value = (MAX + 0.5) * cv;
+
+  D(Serial.printf("Dimmer value: %d\n", value);)
+  ledcWrite(channel, value); 
 }
 
 void receiveMessage() {
@@ -73,7 +77,7 @@ void setup() {
   Serial.begin(115200);
   // Output pin setup
   pinMode(LED, OUTPUT);
-  ledcSetup(channel, freq, resolution);
+  ledcSetup(channel, FREQUENCY, RESOLUTION);
   ledcAttachPin(CV, channel);
   // Wifi client setup
   WiFi.mode(WIFI_STA);
